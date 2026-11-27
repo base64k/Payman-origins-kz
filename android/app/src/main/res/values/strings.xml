@@ -14,7 +14,7 @@
     <string name="render_scale">Ажыратымдылық</string>
 
     <!-- Launcher (home screen) -->
-    <string name="presents">BELMANTEGU ҰСЫНАДЫ</string>
+    <string name="presents">Рекомп: BELMANTEGU • локализация: Semantikateam</string>
     <string name="menu_play">Ойнау</string>
     <string name="menu_options">Баптаулар</string>
     <string name="menu_game_files">Ойын файлдары</string>

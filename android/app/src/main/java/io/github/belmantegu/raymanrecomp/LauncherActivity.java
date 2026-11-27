@@ -191,7 +191,7 @@ public class LauncherActivity extends Activity {
         LinearLayout.LayoutParams padsLp = new LinearLayout.LayoutParams(-2, -2);
         padsLp.topMargin = px(.8f);
         column.addView(pads, padsLp);
-        root.addView(column, at(3.4f, 17.6f, 24f, -2));
+        root.addView(column, at(3.4f, 17.6f, 30f, -2));  // wide enough for the longest label at full size
 
         buildOptions(root);
 
