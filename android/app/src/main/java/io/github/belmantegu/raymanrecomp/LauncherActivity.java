@@ -38,6 +38,7 @@ import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -82,6 +83,8 @@ public class LauncherActivity extends Activity {
     private final List<MenuButton> buttons = new ArrayList<>();
     private int selected;
     private LinearLayout options;
+    private ScrollView optionsScroll;
+    private TextView version;
     private final List<OptionRow> rows = new ArrayList<>();
     private int optionSel;
     private TextView stateText, metaText, toast;
@@ -153,7 +156,6 @@ public class LauncherActivity extends Activity {
             menu.addView(b, lp);
             buttons.add(b);
         }
-        root.addView(menu, at(3.4f, 17.6f, 24f, -2));
 
         // Status plank
         LinearLayout status = new LinearLayout(this);
@@ -172,7 +174,7 @@ public class LauncherActivity extends Activity {
         statusLp.bottomMargin = px(2.2f);
         root.addView(status, statusLp);
 
-        TextView version = text(getString(R.string.version_format, versionName()), 1.2f, CREAM, ui);
+        version = text(getString(R.string.version_format, versionName()), 1.2f, CREAM, ui);
         version.setLetterSpacing(0.05f);
         FrameLayout.LayoutParams versionLp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END);
         versionLp.rightMargin = px(2.6f);
@@ -182,10 +184,14 @@ public class LauncherActivity extends Activity {
         LinearLayout pads = new LinearLayout(this);
         pads.addView(padHint("A", getString(R.string.hint_select), 0xFF5FAE2F));
         pads.addView(padHint("B", getString(R.string.hint_back), 0xFFC8321E));
-        FrameLayout.LayoutParams padsLp = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.END);
-        padsLp.rightMargin = px(2.6f);
-        padsLp.topMargin = px(2f);
-        root.addView(pads, padsLp);
+        // The button hints sit under the menu, clear of the options panel.
+        LinearLayout column = new LinearLayout(this);
+        column.setOrientation(LinearLayout.VERTICAL);
+        column.addView(menu, new LinearLayout.LayoutParams(-1, -2));
+        LinearLayout.LayoutParams padsLp = new LinearLayout.LayoutParams(-2, -2);
+        padsLp.topMargin = px(.8f);
+        column.addView(pads, padsLp);
+        root.addView(column, at(3.4f, 17.6f, 24f, -2));
 
         buildOptions(root);
 
@@ -395,18 +401,23 @@ public class LauncherActivity extends Activity {
             bg.draw(c);
             float cx = getWidth() / 2f, cy = getHeight() / 2f;
             text.setTypeface(display);
-            text.setTextSize(u * 1.9f);
             text.setColor(on ? DARK_TEXT : CREAM);
             text.setShadowLayer(0.01f, 0, u * .15f, on ? 0x99FFECAA : 0x8C5A1408);
-            float hintWidth = 0;
+            Paint small = new Paint(text);
+            small.setTypeface(ui);
+            small.setTextAlign(Paint.Align.LEFT);
+            // A long label (Kazakh) shrinks to fit between the selection arrows.
+            float gap = u * .7f, avail = getWidth() - 2 * u * 2.6f;
+            text.setTextSize(u * 1.9f);
+            small.setTextSize(u * .95f);
+            float need = text.measureText(label) + (hint.isEmpty() ? 0 : small.measureText(hint) + gap);
+            float scale = need > avail && need > 0 ? avail / need : 1f;
+            text.setTextSize(u * 1.9f * scale);
+            small.setTextSize(u * .95f * scale);
+            float labelWidth = text.measureText(label);
+            float hintWidth = hint.isEmpty() ? 0 : small.measureText(hint) + gap * scale;
             if (!hint.isEmpty()) {
-                Paint small = new Paint(text);
-                small.setTypeface(ui);
-                small.setTextSize(u * .95f);
-                hintWidth = small.measureText(hint) + u * .7f;
-                float labelWidth = text.measureText(label);
-                small.setTextAlign(Paint.Align.LEFT);
-                c.drawText(hint, cx + (labelWidth - hintWidth) / 2f + u * .7f, cy + u * .65f, small);
+                c.drawText(hint, cx + (labelWidth - hintWidth) / 2f + gap * scale, cy + u * .65f * scale, small);
             }
             c.drawText(label, cx - hintWidth / 2f, cy - (text.descent() + text.ascent()) / 2f, text);
             if (on) {
@@ -536,9 +547,13 @@ public class LauncherActivity extends Activity {
             rows.add(r);
         }
         options.setVisibility(View.GONE);
+        // Scrolls when the translated labels need more height than the screen has.
+        optionsScroll = new ScrollView(this);
+        optionsScroll.setVerticalScrollBarEnabled(false);
+        optionsScroll.addView(options);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(px(36), -2, Gravity.END | Gravity.CENTER_VERTICAL);
         lp.rightMargin = px(4);
-        root.addView(options, lp);
+        root.addView(optionsScroll, lp);
     }
 
     private static final int[] SCALES = {50, 67, 75, 100}, OPACITIES = {35, 55, 75, 100};
@@ -594,8 +609,18 @@ public class LauncherActivity extends Activity {
 
     private void showOptions(boolean show) {
         options.setVisibility(show ? View.VISIBLE : View.GONE);
+        version.setVisibility(show ? View.GONE : View.VISIBLE);  // it would sit on the panel
         optionSel = 0;
+        optionsScroll.scrollTo(0, 0);
         if (show) paintOptions();
+    }
+
+    // Scrolls the options panel so the highlighted row is on screen.
+    private void keepSelectedVisible() {
+        OptionRow r = rows.get(optionSel);
+        int h = optionsScroll.getHeight(), y = optionsScroll.getScrollY();
+        if (r.getTop() < y) optionsScroll.smoothScrollTo(0, r.getTop());
+        else if (r.getBottom() > y + h) optionsScroll.smoothScrollTo(0, r.getBottom() - h);
     }
 
     // ---- Menu ----
@@ -675,6 +700,7 @@ public class LauncherActivity extends Activity {
         if (optionsOpen()) {
             optionSel = (optionSel + d + rows.size()) % rows.size();
             paintOptions();
+            optionsScroll.post(this::keepSelectedVisible);
         } else {
             select(selected + d);
         }

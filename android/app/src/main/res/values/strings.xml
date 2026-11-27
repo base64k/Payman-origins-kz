@@ -44,13 +44,13 @@
     <string name="opt_graphics">Графика</string>
     <string name="opt_graphics_sub">Жергілікті рендерер немесе GPU эмуляциясы</string>
     <string name="opt_touch">Сенсорлық басқару</string>
-    <string name="opt_opacity">Басқару түймелерінің мөлдірлігі</string>
+    <string name="opt_opacity">Түймелердің мөлдірлігі</string>
     <string name="opt_folder">Ойын папкасы</string>
-    <string name="opt_folder_sub">Орнына папкадан импорттау</string>
+    <string name="opt_folder_sub">Папкадан импорттау</string>
     <string name="opt_backup">Сақтауларды сақтық көшіру</string>
-    <string name="opt_backup_sub">Прогрессіңіз .zip файлы ретінде, қалаған жерде</string>
+    <string name="opt_backup_sub">Прогресс .zip файлы ретінде</string>
     <string name="opt_restore">Сақтауларды қалпына келтіру</string>
-    <string name="opt_restore_sub">Сақтық көшірме .zip файлынан (басқа қолданбадан да)</string>
+    <string name="opt_restore_sub">Сақтық көшірме .zip файлынан</string>
     <string name="value_vulkan">Vulkan</string>
     <string name="value_emulated">Эмуляция</string>
     <string name="value_on">Қосулы</string>
