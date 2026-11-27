@@ -23,6 +23,19 @@ Target: arm64-v8a, Android 10 (API 29) or newer, Vulkan 1.1. Tested build hosts:
 - The macOS (or Linux) ReXGlue SDK in `tools/rexglue/<host>`, used for codegen on the host
 - Your own copy of the game (see the README)
 
+## Shortcut: from an APK you already have
+
+If you already have a build of this app (an APK with `lib/arm64-v8a/librayman.so`), you can build this source, with the Kazakh text, without the ReXGlue SDK and without the codegen:
+
+```sh
+sh android/use_apk_libs.sh path/to/RaymanOrigins-0.5.0.apk   # copies the 5 game libraries
+cd android && ./gradlew assembleDebug                          # android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+The libraries are game-derived: they stay in `android/app/libs/` (ignored by git) and must never be committed or shared.
+
+**Keeping your data.** The new APK keeps the same package name. If it is signed with the same debug key as the one you have (same machine), `adb install -r` upgrades it and keeps everything. If the key differs, Android refuses the update: uninstall first, which deletes the app's files, including the saves and the imported game files. Back up the saves first (Options > Back up saves) and import the game again.
+
 ## 1. ReXGlue for Android
 
 ReXGlue has no Android build upstream. `android/rexglue-patches/` holds our patch against v0.10.0:
