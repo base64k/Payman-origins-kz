@@ -45,6 +45,9 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      - name: Check translations
+        run: python3 tests/check_strings.py
+
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
