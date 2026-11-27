@@ -72,10 +72,12 @@ jobs:
         run: |
           APK=app/build/outputs/apk/debug/app-debug.apk
           test -f "$APK"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump resources "$APK" > resources.txt
-          # The compiled resource table has a Kazakh configuration and the launcher strings.
-          grep -q "config kk" resources.txt
-          grep -q "menu_play" resources.txt
+          unzip -p "$APK" resources.arsc > resources.arsc
+          # The compiled resource table stores strings as UTF-8. "Ойнау" is the
+          # Kazakh "Play" (values-kk only); "menu_play" is the key both locales share.
+          grep -a -q "Ойнау" resources.arsc || { echo "Kazakh strings are missing from the APK"; exit 1; }
+          grep -a -q "menu_play" resources.arsc || { echo "launcher string keys are missing from the APK"; exit 1; }
+          echo "Kazakh resources found in the APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
