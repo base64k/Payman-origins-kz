@@ -2,15 +2,14 @@
 
 ## Languages
 
-The launcher and the in-game settings follow the device language:
+The app's text is Kazakh only: the default strings (`android/app/src/main/res/values/strings.xml`) are in Kazakh, and there is no English translation. The English text was removed.
 
-- **Қазақша (`kk`)**: `android/app/src/main/res/values-kk/strings.xml`
-- **English**: the default (`values/strings.xml`)
-- **Português**: partial (in-game settings only, `values-pt/`); the launcher falls back to English
+- **Қазақша (`kk`)**: the only language, for every device language.
+- **Português** (`values-pt/`): partial (in-game settings only); the other strings show Kazakh.
 
-On Android 13 and later the language can also be chosen just for this app in the system settings (declared in `res/xml/locales_config.xml`).
+On Android 13 and later the language can be chosen just for this app in the system settings (declared in `res/xml/locales_config.xml`).
 
-The game's own text is not changed by this: the console language is still set by `RAYMAN_LANGUAGE` (`1` English, `5` Spanish, `9` Portuguese), and the game ships no Kazakh text.
+The game's own text is not changed by this: the console language is still set by `RAYMAN_LANGUAGE` (`1` English, `5` Spanish, `9` Portuguese), and the game ships no Kazakh text. The game's in-game text stays English by default.
 
 
 Status: **the APK builds.** It runs the recompiled game natively on ARM64 with the ReXGlue runtime (kernel, XMA audio, input, files). Graphics still go through ReXGlue's Xenos GPU emulation over Vulkan, which is heavy. The native renderer (docs/PROGRESS.md section 7) replaces it later. The APK has not been run on a device yet.

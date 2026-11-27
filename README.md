@@ -2,7 +2,7 @@
 
 Қазақ тіліндегі интерфейсі бар **Rayman Origins Recompiled** форкі, Android-ге арналған. Негізгі жоба: [XDanfr/RaymanOriginsRecomp](https://github.com/XDanfr/RaymanOriginsRecomp). Android-нұсқаның құжаты: [docs/ANDROID.md](docs/ANDROID.md).
 
-Android қолданбасының бастапқы экраны, баптаулар және импорт/сақтық көшірме мәтіндері қазақ тілінде (`android/app/src/main/res/values-kk/`). Құрылғының тілі қазақша болса, автоматты түрде қосылады.
+Android қолданбасының барлық мәтіндері тек қазақ тілінде (`android/app/src/main/res/values/strings.xml`): бастапқы экран, баптаулар, импорт және сақтық көшірме. Ағылшын тілі өшірілген.
 
 ---
 

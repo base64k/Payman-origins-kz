@@ -879,7 +879,7 @@ public class LauncherActivity extends Activity {
 
     private void zipSaves(Uri uri) throws IOException {
         OutputStream raw = getContentResolver().openOutputStream(uri);
-        if (raw == null) throw new IOException("cannot write the backup");
+        if (raw == null) throw new IOException(getString(R.string.err_write_backup));
         try (java.util.zip.ZipOutputStream zip = new java.util.zip.ZipOutputStream(raw)) {
             zipDir(saveDir(), "", zip);
         }
@@ -936,11 +936,11 @@ public class LauncherActivity extends Activity {
         parent.mkdirs();
         if (saves.exists() && !saves.renameTo(old)) {
             deleteTree(incoming);
-            throw new IOException("cannot move the current saves aside");
+            throw new IOException(getString(R.string.err_move_saves));
         }
         if (!incoming.renameTo(saves)) {
             old.renameTo(saves);  // put the current saves back
-            throw new IOException("cannot put the backup in place");
+            throw new IOException(getString(R.string.err_put_backup));
         }
         deleteTree(old);
     }
@@ -958,7 +958,7 @@ public class LauncherActivity extends Activity {
     }
 
     private void copyChildren(Uri tree, String parentId, File dest, long[] copied) throws IOException {
-        if (!dest.isDirectory() && !dest.mkdirs()) throw new IOException("cannot create " + dest);
+        if (!dest.isDirectory() && !dest.mkdirs()) throw new IOException(getString(R.string.err_create_dir, dest));
         Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, parentId);
         String[] cols = {DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME,
                          DocumentsContract.Document.COLUMN_MIME_TYPE};
@@ -1018,7 +1018,7 @@ public class LauncherActivity extends Activity {
                 }
             }
         }
-        if (!tmp.renameTo(packFile())) throw new IOException("cannot write " + packFile());
+        if (!tmp.renameTo(packFile())) throw new IOException(getString(R.string.err_write_pack, packFile()));
     }
 
     private void unzip(Uri zip, File dest) throws IOException {

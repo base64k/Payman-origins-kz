@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Languages the app has translations for. Lets Android settings offer a
-     per-app language choice (Android 13+). -->
+     per-app language choice (Android 13+). The default (no match) is Kazakh. -->
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
-    <locale android:name="en" />
     <locale android:name="kk" />
     <locale android:name="pt" />
 </locale-config>

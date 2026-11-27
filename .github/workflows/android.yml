@@ -74,7 +74,7 @@ jobs:
           test -f "$APK"
           unzip -p "$APK" resources.arsc > resources.arsc
           # The compiled resource table stores strings as UTF-8. "Ойнау" is the
-          # Kazakh "Play" (values-kk only); "menu_play" is the key both locales share.
+          # Kazakh "Play" (the app's default strings); "menu_play" is its key.
           grep -a -q "Ойнау" resources.arsc || { echo "Kazakh strings are missing from the APK"; exit 1; }
           grep -a -q "menu_play" resources.arsc || { echo "launcher string keys are missing from the APK"; exit 1; }
           echo "Kazakh resources found in the APK"
